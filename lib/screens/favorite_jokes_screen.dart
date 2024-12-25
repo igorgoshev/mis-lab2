@@ -3,29 +3,22 @@ import '../models/joke.dart';
 import '../services/api_services.dart';
 import '../widgets/joke_card.dart';
 
-class JokesListScreen extends StatelessWidget {
-  final String jokeType;
-  final ApiService apiService = ApiService();
+class FavoriteJokesScreen extends StatelessWidget {
+  final ApiService apiService;
 
-  JokesListScreen({
+  const FavoriteJokesScreen({
     Key? key,
-    required this.jokeType,
+    required this.apiService,
   }) : super(key: key);
-
-  String get displayType {
-    return jokeType.split('-')
-        .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-        .join(' ');
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$displayType Jokes'),
+        title: const Text('Favorite Jokes'),
       ),
       body: FutureBuilder<List<Joke>>(
-        future: apiService.getJokesByType(jokeType),
+        future: apiService.getFavoriteJokes(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -33,14 +26,16 @@ class JokesListScreen extends StatelessWidget {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
-          // JokesListScreen.dart - Update the JokeCard creation
+          if (snapshot.data!.isEmpty) {
+            return const Center(child: Text('No favorite jokes yet!'));
+          }
           return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               return JokeCard(
                 joke: snapshot.data![index],
-                apiService: apiService, // Add this line
+                apiService: apiService,
               );
             },
           );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_services.dart';
 import '../widgets/joke_type_card.dart';
+import 'favorite_jokes_screen.dart';
 import 'jokes_list_screen.dart';
 import 'random_joke_screen.dart';
 
@@ -15,15 +16,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: // Add this action to your AppBar in HomeScreen
+      AppBar(
         title: const Text('Joke Types'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FavoriteJokesScreen(apiService: apiService),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.casino),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RandomJokeScreen()),
+                MaterialPageRoute(
+                  builder: (context) => RandomJokeScreen(apiService: apiService),
+                ),
               );
             },
           ),

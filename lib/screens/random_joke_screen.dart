@@ -4,9 +4,10 @@ import '../services/api_services.dart';
 import '../widgets/joke_card.dart';
 
 class RandomJokeScreen extends StatelessWidget {
-  final ApiService apiService = ApiService();
+  final ApiService apiService;
 
-  RandomJokeScreen({Key? key}) : super(key: key);
+  RandomJokeScreen({Key? key,
+  required this.apiService}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,10 @@ class RandomJokeScreen extends StatelessWidget {
               if (!snapshot.hasData) {
                 return const CircularProgressIndicator();
               }
-              return JokeCard(joke: snapshot.data!);
+              return JokeCard(
+                joke: snapshot.data!,
+                apiService: apiService, // Add this line
+              );
             },
           ),
         ),
